@@ -21,9 +21,7 @@ public class CursoController {
     private final CursoService service;
 
     @PostMapping
-    public ResponseEntity<DatosDetalleCurso> register(
-            @RequestBody @Valid DatosCurso datos
-    ) {
+    public ResponseEntity<DatosDetalleCurso> register( @RequestBody @Valid DatosCurso datos) {
         var detalleCurso = service.registrar(datos);
         return ResponseEntity.ok(detalleCurso);
     }
