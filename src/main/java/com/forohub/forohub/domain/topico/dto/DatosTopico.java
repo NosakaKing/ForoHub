@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotNull;
 public record DatosTopico(
         @NotBlank String titulo,
         @NotBlank String mensaje,
-        @NotNull EstadoTopico estado,
-        @NotNull Long idCurso,
-        @NotNull Long idAutor
+        @NotNull Long idCurso
         ) {
 }

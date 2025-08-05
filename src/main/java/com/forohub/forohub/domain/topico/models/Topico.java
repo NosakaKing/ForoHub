@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Table(name = "topicos")
 @Entity(name = "Topico")
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,6 +27,8 @@ public class Topico {
     private EstadoTopico estado;
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
     private LocalDateTime fechaCreacion;
+    @Column(name = "solucion_id")
+    private Long solucionId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curso_id")
     private Curso curso;
@@ -40,9 +42,6 @@ public class Topico {
         }
         if(datos.mensaje() != null) {
             this.mensaje = datos.mensaje();
-        }
-        if(datos.estado() != null) {
-            this.estado = datos.estado();
         }
     }
 }

@@ -7,8 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record DatosEditarTopico(
         @NotNull Long id,
         String titulo,
-        String mensaje,
-        EstadoTopico estado
+        String mensaje
 ) {
 
 }

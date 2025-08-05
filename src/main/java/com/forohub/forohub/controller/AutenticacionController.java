@@ -1,33 +1,42 @@
 package com.forohub.forohub.controller;
 
 import com.forohub.forohub.domain.usuario.dto.DatosAutenticacion;
-import com.forohub.forohub.domain.usuario.models.Usuario;
+import com.forohub.forohub.domain.usuario.dto.DatosUsuario;
+import com.forohub.forohub.domain.usuario.service.AuthService;
 import com.forohub.forohub.infra.security.DatosTokenJWT;
-import com.forohub.forohub.infra.security.TokenService;
+import com.forohub.forohub.infra.util.CookieUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AutenticacionController {
-    private final TokenService tokenService;
-    private final AuthenticationManager manager;
+    private final AuthService service;
 
-    @PostMapping
+    @PreAuthorize("permitAll()")
+    @PostMapping("/login")
     public ResponseEntity<DatosTokenJWT> login(
-            @RequestBody @Valid DatosAutenticacion datos
+            @RequestBody @Valid DatosAutenticacion datos,
+            HttpServletResponse response
     ) {
-        var autenticationtoken = new UsernamePasswordAuthenticationToken(datos.email(), datos.contrasenia());
-        var autenticacion = manager.authenticate(autenticationtoken);
-        var tokenJWT = tokenService.generarToken((Usuario) autenticacion.getPrincipal());
-        return ResponseEntity.ok(new DatosTokenJWT(tokenJWT, datos.email()));
+        var tokenData = service.login(datos, response);
+        return ResponseEntity.ok(tokenData);
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        response.addCookie(CookieUtil.clearAccessTokenCookie());
+        return ResponseEntity.ok().build();
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/whoami")
+    public ResponseEntity<DatosUsuario> whoAmI() {
+        return ResponseEntity.ok(service.obtenerUsuarioLogeado());
     }
 }
