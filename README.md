@@ -1,14 +1,15 @@
 # 🚀 Foro Hub - API REST para gestión de tópicos
 
-Una API REST robusta desarrollada con Spring Boot para la gestión de un foro de discusión, permitiendo crear, leer, actualizar y eliminar tópicos.
+Una API REST robusta desarrollada con Spring Boot para la gestión de un foro de discusión, Permite a los usuarios registrarse, iniciar sesión y participar en discusiones.
 
 ---
 
 ## 📚 Descripción del Proyecto
 
-`Foro Hub - API REST` es un servicio backend diseñado para proporcionar una interfaz programática completa para la creación, lectura, actualización y eliminación de tópicos.
+`Foro Hub - API REST` es una plataforma de foros pensada para facilitar la discusión de temas técnicos, académicos o de interés general, con un enfoque limpio, escalable y profesional.
 
 El proyecto se adhiere a una arquitectura en capas clara, promoviendo la modularidad, la mantenibilidad y la escalabilidad. Incorpora principios de Clean Code y buenas prácticas de diseño de APIs REST, con un fuerte enfoque en la seguridad mediante la autenticación basada en JWT y el hashing de contraseñas. La gestión del esquema de la base de datos se realiza de forma automatizada y controlada con Flyway.
+Soporte completo de autenticación y autorización con tokens JWT y cookies seguras.
 
 ---
 
@@ -17,11 +18,20 @@ El proyecto se adhiere a una arquitectura en capas clara, promoviendo la modular
 * **Gestión Completa de Tópicos (CRUD):**
     * Creación de nuevos tópicos con título, mensaje, autor (usuario registrado) y curso.
     * Detalle de un tópico específico por ID.
-    * Actualización de tópicos existentes (título, autor, mensaje, curso).
+    * Actualización de tópicos existentes (título, mensaje).
     * Eliminación de tópicos.
+* **Gestión de Comentarios:**
+    * Creación de comentarios por parte de usuarios autenticados.
+    * Visualización de todos los comentarios de un tópico.
+    * Asociación automática del comentario con el autor y el tópico correspondiente.
+    * El comentario incluye: mensaje, fecha de creación, autor y tópico al que pertenece.
 * **Autenticación y Autorización Segura:**
     * **Spring Security:** Framework robusto para la seguridad de la aplicación.
     * **JSON Web Tokens (JWT):** Autenticación sin estado para proteger los endpoints de la API.
+    * **Cookies HTTP-only:** El token se almacena en una cookie segura y de solo lectura por el navegador, protegiendo contra ataques XSS, Actualmente, cuando el token JWT expira, el usuario debe volver a iniciar sesión.
+
+    * En futuras versiones se implementará un sistema de refresh tokens usando cookies HTTP-only para renovar los tokens de forma transparente y mejorar la experiencia del usuario.
+
     * **Hashing de Contraseñas:** Las contraseñas se almacenan de forma segura utilizando BCrypt.
 * **Validación de Datos:**
     * Uso de `jakarta.validation` para asegurar la integridad y el formato de los datos de entrada.
@@ -39,7 +49,7 @@ El proyecto se adhiere a una arquitectura en capas clara, promoviendo la modular
 * **Base de Datos:** MySQL
 * **ORM:** Spring Data JPA / Hibernate
 * **Migraciones DB:** Flyway
-* **Seguridad:** Spring Security, JWT (JSON Web Tokens)
+* **Seguridad:** Implementada con Spring Security y autenticación basada en JWT (JSON Web Tokens), usando cookies HTTP-only para el almacenamiento seguro de tokens.
 * **Validación:** Jakarta Validation (Bean Validation)
 * **Herramienta de Construcción:** Maven
 
@@ -49,57 +59,6 @@ El proyecto se adhiere a una arquitectura en capas clara, promoviendo la modular
 
 El proyecto sigue una arquitectura en capas limpia y modular, facilitando la separación de responsabilidades y la mantenibilidad:
 
-```
-api/
-├── .idea/
-├── .mvn/
-├── src/
-│   └── main/
-│       └── java/
-│           └── foro.hub.api/
-│               ├── controller/
-│               │   ├── AutenticacionController
-│               │   ├── CursoController
-│               │   └── TopicoController
-│               ├── domain/
-│               │   ├── topico/
-│               │   │   ├── DatosActualizarTopico
-│               │   │   ├── DatosRegistroTopico
-│               │   │   ├── Topico
-│               │   │   └── TopicoRepository
-│               │   └── usuario/
-│               │       ├── AutenticacionService
-│               │       ├── DatosAutenticacion
-│               │       ├── Usuario
-│               │       └── UsuarioRepository
-│               ├── infra/
-│               │   ├── exceptions/
-│               │   │   └── GestorDeErrores
-│               │   └── security/
-│               │       ├── DatosTokenJWT
-│               │       ├── SecurityConfiguration
-│               │       ├── SecurityFilter
-│               │       └── TokenService
-│               └── ApiApplication
-├── resources/
-│   ├── db.migration/
-│   │   └── V1__create-table-usuarios.sql
-│   ├── static/
-│   ├── templates/
-│   └── application.properties
-└── test/
-    └── target/
-        ├── .gitattributes
-        ├── .gitignore
-        ├── HELP.md
-        ├── mvnw
-        ├── mvnw.cmd
-        ├── pom.xml
-        └── README.md
-├── External Libraries/
-└── Scratches and Consoles/
-```
-
 ---
 
 ## 🔒 Seguridad
@@ -107,95 +66,30 @@ api/
 La seguridad es un pilar fundamental de esta API:
 
 * **Autenticación JWT:** Cada solicitud a un endpoint protegido requiere un token JWT válido en el encabezado `Authorization`.
+* **Cookies HTTP-only:** El token (`token`) se gestiona de forma segura mediante una cookie marcada como `HttpOnly` y `Secure`, lo que impide su acceso vía JavaScript y protege contra ataques XSS.
+
 * **Hashing de Contraseñas:** Las contraseñas de los usuarios nunca se almacenan en texto plano. Se utiliza `BCryptPasswordEncoder` para hashearlas antes de guardarlas en la base de datos.
 * **Autorización Flexible:** Los endpoints están configurados para permitir o requerir autenticación según su función (ej. registro y lista de tópicos públicos, creación de tópicos protegida).
 
 ---
 
-## 🔍 Endpoints de la API
+## 🖼️ Ejemplos en la Interfaz
+* **Login:**
+![TopicoNuevo](https://i.imgur.com/lsfdTp2.png)
 
-Una vez que la aplicación esté ejecutándose, puedes interactuar con ella:
+* **Nuevo Topico:**
+![TopicoNuevo](https://i.imgur.com/c0UokZk.png)
 
-### Autenticación
+* **Lista de Topicos:**
+![TopicoLista](https://i.imgur.com/8WJcYP3.png)
 
-* **`POST /auth`**
-    * **Descripción:** Autentica a un usuario y devuelve un token JWT.
-    * **Body (JSON):**
-        ```json
-        {
-            "login": "raulduran@gmail.com",
-            "contrasena": "ContraseñaSegura!10"
-        }
-        ```
-    * **Respuesta (200 OK):**
-        ```json
-       {
-           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJBUEkgRm9yb0h1YiIsInN1YiI6InJhdWxkdXJhbjI4MDhAZ21haWwuY29tIiwiZXhwIjoxNzUzNDY2OTc5fQ.fyCr-rlr-Yd4mnKCJR3Vwl9oBMv4AUVGezuAwKJ6_wI",
-           "nombreUsuario": "raulduran@gmail.com"
-        }
-        ```
+* **Nuevo Comentario:**
+![Comentario](https://i.imgur.com/DUIyWhj.png)
 
-### Curso
+* **Lista de Comentarios:**
+![TopicoUno](https://i.imgur.com/1UsePhC.png)
 
-* **`POST /Curso`**
-    * **Descripción:** Crea un nuevo curso. (Requiere JWT)
-    * **Headers:** `Authorization: Bearer <JWT_TOKEN>`
-    * **Body (JSON):**
-        ```json
-        {
-             "id": 3,
-             "nombre": "Desarrollo Móvil",
-             "descripcion": "EL mejor curso de Android Studio",
-             "estado": "ACTIVO"
-        }
-        ```
-    * **Respuesta (200 Created):** Detalles del curso creado. 
----
 
-### Topicos
-
-* **`POST /Topico`**
-    * **Descripción:** Crea un nuevo topico. (Requiere JWT)
-    * **Headers:** `Authorization: Bearer <JWT_TOKEN>`
-    * **Body (JSON):**
-        ```json
-        {
-        
-            "titulo": "Error usando Mysql 8.0 en Java Spring boot",
-            "mensaje": "Estoy teniendo problemas con una excepción NullPointerException.",
-            "estado": "NO_RESPONDIDO",
-            "idCurso": 1,
-           "idAutor": 1
-        }
-        ```
-    * **Respuesta (200 Created):** Detalles del topico creado.
-
-* **`GET /topicos`**
-    * **Descripción:** Lista todos los tópicos paginados. (No requiere JWT)
-    * **Respuesta (200 OK):** Lista de tópicos.
-
-* **`GET /topicos/byId`**
-    * **Descripción:** Detalla un tópico por su ID. (Requiere JWT)
-    * **Headers:** `Authorization: Bearer <JWT_TOKEN>`
-    * **Respuesta (200 OK):** Detalles del tópico.
-
-* **`PUT /topicos`**
-    * **Descripción:** Actualiza los datos de un tópico (título, mensaje, estado). (Requiere JWT)
-    * **Headers:** `Authorization: Bearer <JWT_TOKEN>`
-    * **Body (JSON):**
-        ```json
-        {
-            "titulo": "Mensaje del tópico actualizado.",
-            "mensaje": "SPRING",
-            "estado": "SOLUCIONADO"
-        }
-        ```
-    * **Respuesta (200 OK):** Detalles del tópico actualizado.
-
-* **`DELETE /topicos/deleteByiD`**
-    * **Descripción:** Elimina un tópico por su ID. (Requiere JWT)
-    * **Headers:** `Authorization: Bearer <JWT_TOKEN>`
-    * **Respuesta (200 OK):** Si la eliminación fue exitosa.
  
 ---
 
