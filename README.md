@@ -81,13 +81,13 @@ La seguridad es un pilar fundamental de esta API:
 ![TopicoNuevo](https://i.imgur.com/c0UokZk.png)
 
 * **Lista de Topicos:**
-![TopicoLista](https://i.imgur.com/8WJcYP3.png)
+![TopicoLista](https://i.imgur.com/bdw4T8H.png)
 
 * **Nuevo Comentario:**
-![Comentario](https://i.imgur.com/DUIyWhj.png)
+![Comentario](https://i.imgur.com/DVDAuPT.png)
 
 * **Lista de Comentarios:**
-![TopicoUno](https://i.imgur.com/1UsePhC.png)
+![TopicoUno](https://i.imgur.com/C9z278a.png)
 
 
  
