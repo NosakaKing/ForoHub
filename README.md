@@ -89,8 +89,19 @@ La seguridad es un pilar fundamental de esta API:
 * **Lista de Comentarios:**
 ![TopicoUno](https://i.imgur.com/C9z278a.png)
 
+## 🏛 Despliegue en Docker
 
- 
+El proyecto está corriendo en un contenedor Docker y puedes probarlo usando el siguiente usuario de prueba:
+
+**Usuario:** `Usuario`  
+**Contraseña:** `Usuario123!`
+
+🌐 Accede al sitio aquí: [ForoHub en Azure](http://20.163.60.146/forohub)
+
+---
+
+💡 **Tip:** Si quieres probar creando temas o comentarios, usa este usuario de prueba para no afectar datos reales.
+
 ---
 
 ## 📜 **Licencia**
